@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AffordabilityIQ | Opening Listing…</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #C8102E;
+      --black:  #1A1A1A;
+      --grey:   #6B6B6B;
+      --light:  #F7F5F4;
+      --border: #E8E3DF;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--black);
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(0,0,0,.10);
+      padding: 48px 40px 40px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      animation: popIn .35s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.92) translateY(12px); }
+      to   { opacity: 1; transform: scale(1)  translateY(0); }
+    }
+
+    .icon-wrap {
+      width: 72px;
+      height: 72px;
+      background: #FFF0F3;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .icon-wrap svg {
+      width: 34px;
+      height: 34px;
+      color: var(--red);
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--red);
+      letter-spacing: -.02em;
+      margin-bottom: 14px;
+    }
+
+    .address-pill {
+      display: inline-block;
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 18px;
+      word-break: break-word;
+    }
+
+    .disclaimer {
+      font-size: .875rem;
+      color: var(--grey);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .progress-track {
+      background: var(--border);
+      border-radius: 99px;
+      height: 5px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 99px;
+      width: 100%;
+      transform-origin: left;
+      animation: drain 3s linear forwards;
+    }
+    @keyframes drain {
+      from { transform: scaleX(1); }
+      to   { transform: scaleX(0); }
+    }
+
+    .redirect-note {
+      font-size: .8rem;
+      color: var(--grey);
+    }
+    .redirect-note a {
+      color: var(--red);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .redirect-note a:hover { text-decoration: underline; }
+
+    .copy-fallback {
+      display: none;
+      margin-top: 20px;
+      background: #fffbea;
+      border: 1px solid #f0d060;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: .85rem;
+      color: #555;
+      text-align: left;
+    }
+    .copy-fallback strong { display: block; margin-bottom: 4px; color: var(--black); }
+
+    .brand-footer {
+      margin-top: 32px;
+      font-size: .8rem;
+      color: #aaa;
+    }
+    .brand-footer span { color: var(--red); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="icon-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <path d="M9 12h6M9 16h6"/>
+    </svg>
+  </div>
+
+  <h1>Address Copied!</h1>
+
+  <div class="address-pill" id="addr-display">Loading…</div>
+
+  <p class="disclaimer">Paste it in the search bar on the next page.</p>
+
+  <div class="progress-track">
+    <div class="progress-fill"></div>
+  </div>
+
+  <p class="redirect-note">
+    Redirecting you to KelvinHart.fathomrealty.com…
+    &nbsp;<a href="#" id="go-now-link">Go now →</a>
+  </p>
+
+  <div class="copy-fallback" id="copy-fallback">
+    <strong>📋 Clipboard access was blocked by your browser.</strong>
+    Copy the address above manually, then paste it in the search bar on the next page.
+  </div>
+
+</div>
+
+<div class="brand-footer">
+  <span>AffordabilityIQ</span> by Hart &nbsp;·&nbsp; Kelvin Hart, Fathom Realty Indiana
+</div>
+
+<script>
+  (function () {
+    const REDIRECT_DELAY = 3000;
+
+    const params = new URLSearchParams(window.location.search);
+    const addr   = params.get('addr') || '';
+    const dest   = params.get('dest') || 'https://kelvinhart.fathomrealty.com/property-search/any/status=active,viewport=40.098659:-85.779579_39.576687:-86.452491';
+
+    document.getElementById('addr-display').textContent = addr || '(address not found)';
+    document.getElementById('go-now-link').href = dest;
+
+    function copyAddr() {
+      if (!addr) return Promise.resolve(false);
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(addr).then(() => true).catch(() => false);
+      }
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = addr;
+        ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return Promise.resolve(ok);
+      } catch (e) {
+        return Promise.resolve(false);
+      }
+    }
+
+    copyAddr().then(function (copied) {
+      if (!copied) {
+        document.getElementById('copy-fallback').style.display = 'block';
+      }
+    });
+
+    setTimeout(function () {
+      window.location.href = dest;
+    }, REDIRECT_DELAY);
+  })();
+</script>
+
+</body>
+</html>
