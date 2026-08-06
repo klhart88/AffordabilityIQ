@@ -2,9 +2,18 @@
 const EMAILJS_SERVICE  = 'service_m3nxglc';
 const EMAILJS_TEMPLATE = 'template_qzj7bt5';
 const EMAILJS_KEY      = 'cwY7cLvTSDnRlXoso';
-const AIRTABLE_BASE    = 'appFFld4ImANnTKz3';
-const AIRTABLE_TABLE   = 'Leads';
-const AIRTABLE_TOKEN   = 'patfcAEDgZ2m2qSdz.684dc221b5c6845fdd7dc0770d50bb290a88a38441b5f8a90b454503221ee5d5';
+const LEAD_PROXY_URL = 'https://affordabilityiq-lead-proxy.klhart88.workers.dev';
+
+   async function saveToAirtable() {
+     // ...build `fields` as before...
+     const res = await fetch(LEAD_PROXY_URL, {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ fields, recordId: S.airtableRecordId }),
+     });
+     const data = await res.json();
+     if (res.ok) S.airtableRecordId = data.id;
+   }
 const RENTCAST_KEY     = '244e09bec88c47fa85fac1f3cb9696b4';
 const FATHOM_BASE      = 'https://kelvinhart.fathomrealty.com';
 const HOME_SEARCH_URL  = 'https://kelvinhart.fathomrealty.com/property-search/any/status=active,viewport=40.098659:-85.779579_39.576687:-86.452491';
