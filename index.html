@@ -49,6 +49,26 @@
 <body>
 
 <!-- ── HEADER / NAV ── -->
+<style>
+/* V5: match and override the more specific existing header contact rules */
+@media (max-width: 900px) {
+  header.top .mobile-menu .mobile-contact-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  header.top .mobile-menu .mobile-contact-grid > a {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    padding: 10px 8px !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+</style>
 <header class="top" id="top">
 <div class="wrap nav">
 <a aria-label="SmartIQ Realty home" class="logo smartiq-lockup" href="http://smartiqrealty.com/">
